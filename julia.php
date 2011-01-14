@@ -56,4 +56,4 @@ class Julia extends EscapeTime{
 $size = array(500, 500);
 $limits = array(-1.5, 0.5, -1, 1);
 $frac = new Julia($limits, $size, 200);
-$frac->generateImage('julia.png', array(-0.8, 0.156));
+$frac->generateImage('julia.png', array(0.285, 0.01));
