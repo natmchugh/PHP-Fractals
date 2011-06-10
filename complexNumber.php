@@ -1,45 +1,73 @@
 <?php
-class ComplexNumber {
 
-	private $_real;
-	private $_imaginary;
+class ComplexNumberPHP {
 
-	public function  __construct($real, $imaginary) {
-	 	$this->_real = $real;
-		$this->_imaginary = $imaginary;
+	private $_r;
+	private $_i;
+
+	public function __construct($real, $imaginary) {
+		$this->_r = $real;
+		$this->_i = $imaginary;
 	}
 
+	// just add the real and imaginary components
+	// (a+bi) + (c+di) = (a + c) + (b + d)i
+	public function add(ComplexNumberPHP $number) {
+		$real = $this->_r + $number->_r;
+		$imaginary = $this->_i + $number->_i;
+		$this->_r = $real;
+		$this->_i = $imaginary;
+		return $this;
+	}
 
-	public function multiplyBy(ComplexNumber $number) {
+	// just subtract the real and imaginary components
+	// (a+bi) - (c+di) = (a - c) + (b - d)i
+	public function subtract(ComplexNumberPHP $number) {
+		$real = $this->_r - $number->_r;
+		$imaginary = $this->_i - $number->_i;
+		$this->_r = $real;
+		$this->_i = $imaginary;
+		return $this;
+	}
+	
+	public function multiplyBy(ComplexNumberPHP $number) {
 //	    (a+bi)(c+di) = (ac - bd) + (bc + ad)i
-	      $real = $this->_real * $number->_real - $this->_imaginary * $number->_imaginary;
-	      $imaginary = $this->_imaginary * $number->_real + $this->_real * $number->_imaginary;
-	      $this->_real = $real;
-	      $this->_imaginary = $imaginary;
-	      return $this;
+		$real = $this->_r * $number->_r - $this->_i * $number->_i;
+		$imaginary = $this->_i * $number->_r + $this->_r * $number->_i;
+		$this->_r = $real;
+		$this->_i = $imaginary;
+		return $this;
+	}
 
+	public function divideBy(ComplexNumberPHP $number) {
+//	    (a+bi)/(c+di) = (ac+bd+i(bc-ad))/(c^2+d^2)
+		$numerator = pow($number->_r, 2) + pow($number->_i , 2);
+		$real = ($this->_r * $number->_r + $this->_i * $number->_i) / $numerator;
+		$imaginary = ($this->_i * $number->_r - $this->_r * $number->_i) / $numerator;
+		$this->_r = $real;
+		$this->_i = $imaginary;
+		return $this;
 	}
 
 	public function square() {
-		      // When we square a complex number in the form x+yi:
-	      // New real component: x^2-y^2
-	      // New imaginary component: 2*real*imaginary
-	      $real = $this->_real * $this->_real - $this->_imaginary * $this->_imaginary;
-	      $imaginary = 2 * $this->_real * $this->_imaginary;
-	      $this->_real = $real;
-	      $this->_imaginary = $imaginary;
-	      return $this;
+// When we square a complex number in the form a+bi:
+// New real component: a^2-b^2
+// New imaginary component: 2*a*b
+		$real = $this->_r * $this->_r - $this->_i * $this->_i;
+		$imaginary = 2 * $this->_r * $this->_i;
+		$this->_r = $real;
+		$this->_i = $imaginary;
+		return $this;
 	}
 
 	public function greaterThanTwo() {
-		return abs($this->_real) + abs($this->_imaginary) > 2;
+//		i.e. is length on argand diagram longer than two
+//		use pythagoras a^2 + b^2 = c^2
+		return pow($this->_r, 2) + pow($this->_i, 2) > 4;
 	}
 
-	public function add($r, $i) {
-		$real =  $this->_real + $r ;
-		$imaginary = $this->_imaginary + $i;
-		$this->_real = $real;
-	      	$this->_imaginary = $imaginary;
-	      	return $this;
+	public function lessThanTwo() {
+		return!$this->greaterThanTwo();
 	}
+
 }

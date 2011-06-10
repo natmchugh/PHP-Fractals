@@ -2,7 +2,7 @@
 
 class Pallette implements ArrayAccess{
 
-	static	private $_cache;
+	static	private $_cache = array();
 	private $_maxIterations;
 	private $_image;
 
@@ -16,7 +16,7 @@ class Pallette implements ArrayAccess{
     }
 
     public function offsetExists($offset) {
-        return $offset < $this->_maxIterations || 'inside' == $offset;
+        return $offset < $this->_maxIterations || 'inside' == $offset || 'scale' == $offset;
     }
 
     public function offsetUnset($offset) {
@@ -29,14 +29,15 @@ class Pallette implements ArrayAccess{
 	    }
 	    if ('inside' == $offset) {
 		$return = imagecolorallocate($this->_image, 0, 0, 0);
+		} else if ('scale' == $offset) {
+		$return = imagecolorallocate($this->_image, 255, 255, 255);
 	    } else {
-		$green = 255 * ($offset+100) / ($this->_maxIterations);
-		$boost = log10(($offset-1)*10/$this->_maxIterations) * 50;
-		$return = imagecolorallocate($this->_image, 255, $green + $boost, 20);
+//		$green =  $offset / $this->_maxIterations *255;
+		$green = log($offset, 500)/log($this->_maxIterations, 500)* 255;
+		$return = imagecolorallocate($this->_image, 255, $green, 70);
 	    }
 	self::$_cache[$offset] = $return;
 	return $return;
 
     }
-
 }
