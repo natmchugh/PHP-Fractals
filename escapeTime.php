@@ -1,5 +1,6 @@
 <?php
-include('pallete.php');
+include('palette.php');
+include('paletteLinear.php');
 
 class EscapeTime {
 	protected $_minX;
@@ -30,7 +31,7 @@ class EscapeTime {
 		$this->_image = imagecreate($this->_imageWidth, $this->_imageHeight);
 
 		// Load the palette to find colours
-		$this->_colours = new Pallette($this->_maxIterations, $this->_image);
+		$this->_colours = new Palette($this->_maxIterations, $this->_image);
 	}
 
 	public function zoom($factor) {
@@ -38,6 +39,16 @@ class EscapeTime {
 		$this->_minY = $this->_minY / $factor;
 		$this->_maxX = $this->_maxX / $factor;
 		$this->_maxY = $this->_maxY / $factor;
+	}
+
+	public function centre($x, $y) {
+		$width = $this->_maxX - $this->_minX;
+		$height = $this->_maxY - $this->_minY;
+
+		$this->_minX = $x - $width / 2;
+		$this->_maxX = $x + $width / 2;
+		$this->_minY = $y - $height / 2;
+		$this->_maxY = $y + $height / 2;
 	}
 
 	public function pan($offset) {
@@ -48,9 +59,10 @@ class EscapeTime {
 	}
 }
 
-
-@apache_setenv('no-gzip', 1);
-@ini_set('zlib.output_compression', 0);
-@ini_set('implicit_flush', 1);
-for ($i = 0; $i < ob_get_level(); $i++) { ob_end_flush(); }
-ob_implicit_flush(1);
+if ('cli' != php_sapi_name()) {
+	@apache_setenv('no-gzip', 1);
+	@ini_set('zlib.output_compression', 0);
+	@ini_set('implicit_flush', 1);
+	for ($i = 0; $i < ob_get_level(); $i++) { ob_end_flush(); }
+	ob_implicit_flush(1);
+}

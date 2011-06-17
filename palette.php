@@ -1,6 +1,6 @@
 <?php
 
-class Pallette implements ArrayAccess{
+class Palette implements ArrayAccess{
 
 	static	private $_cache = array();
 	private $_maxIterations;
@@ -33,11 +33,11 @@ class Pallette implements ArrayAccess{
 		$return = imagecolorallocate($this->_image, 255, 255, 255);
 	    } else {
 //		$green =  $offset / $this->_maxIterations *255;
-		$green = log($offset, 500)/log($this->_maxIterations, 500)* 255;
+		$green = log($offset)/log($this->_maxIterations)* 255;
 		$return = imagecolorallocate($this->_image, 255, $green, 70);
 	    }
-	self::$_cache[$offset] = $return;
-	return $return;
+		self::$_cache[$offset] = $return;
+		return $return;
 
     }
 }

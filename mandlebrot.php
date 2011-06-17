@@ -8,6 +8,7 @@ class Mandlebrot extends EscapeTime{
 	public function generateImage($filename = 'mandlebrot.png') {
 		$this->setUpImage();
 		$count = $rowCount = 0;
+		$calls = 0;
 		$total = $this->_imageWidth * $this->_imageHeight;
 		for ($i=0; $i<$this->_imageWidth; $i++) {
 				$oldX = $x;
@@ -47,7 +48,7 @@ class Mandlebrot extends EscapeTime{
 				    $y2 = $z[1] * $z[1];
 //					$z->square();
 //					$z->add($c);
-
+++$calls;
 				    ++$iteration;
 				}
 				if ($iteration >= $this->_maxIterations) {
@@ -69,6 +70,7 @@ class Mandlebrot extends EscapeTime{
 				ob_flush();
 		}
 		imagepng($this->_image, $filename);
+		var_dump(__LINE__, $calls);
 		return $filename;
 	}
 
